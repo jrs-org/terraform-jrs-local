@@ -1,7 +1,9 @@
 name: Create terraform plan
 on:
-  pull_request:
-    branches: [main, dev]
+  # pull_request:
+  #   branches: [main, dev]
+  push:
+    branches: [ft/tfplan]
 
 jobs:
   start-runner:
@@ -15,7 +17,7 @@ jobs:
       label: ${{ steps.start-ec2-runner.outputs.label }}
       ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
     steps:
-      - name: Configure AWS Credentials for Wizeprompt
+      - name: Configure AWS Credentials for jrs-local
         uses: aws-actions/configure-aws-credentials@v4
         with:
           audience: sts.amazonaws.com

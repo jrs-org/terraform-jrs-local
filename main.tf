@@ -10,7 +10,3 @@ module "vpc" {
   region = var.region
   #   tags   = module.common_tags.tags
 }
-
-
-
-
