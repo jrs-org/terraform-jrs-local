@@ -15,7 +15,7 @@ jobs:
       label: ${{ steps.start-ec2-runner.outputs.label }}
       ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
     steps:
-      - name: Configure AWS Credentials for Wizeprompt
+      - name: Configure AWS Credentials for jrs-local
         uses: aws-actions/configure-aws-credentials@v4
         with:
           audience: sts.amazonaws.com
@@ -30,8 +30,8 @@ jobs:
         with:
           mode: start
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-          ec2-image-id: ami-0005e0cfe09cc9050
-          ec2-instance-type: t2.micro
+          ec2-image-id: ami-06aa3f7caf3a30282
+          ec2-instance-type: t3.medium
           subnet-id: subnet-099e0cf8d526f00d7
           security-group-id: sg-018e56852a5b353cf
 
@@ -93,146 +93,147 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
-  #     - name: Environments Dependencies
-  #       id: dependencies
-  #       shell: bash
-  #       run: |
-  #         BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
-  #         if [[ $BRANCH == "main" ]]; then
-  #           ENVIRONMENT="prod"
-  #           WORKSPACE="prod"
-  #         else
-  #           ENVIRONMENT="dev"
-  #           WORKSPACE="default"
-  #         fi
-  #         echo "environment=${ENVIRONMENT}" >> $GITHUB_OUTPUT
-  #         echo "workspace=${WORKSPACE}" >> $GITHUB_OUTPUT
+      - name: Environments Dependencies
+        id: dependencies
+        shell: bash
+        run: |
+          BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          if [[ $BRANCH == "main" ]]; then
+            ENVIRONMENT="dev"
+            WORKSPACE="dev"
+          else
+            ENVIRONMENT="dev"
+            WORKSPACE="dev"
+          fi
+          echo ${BRANCH}
+          echo "environment=${ENVIRONMENT}" >> $GITHUB_OUTPUT
+          echo "workspace=${WORKSPACE}" >> $GITHUB_OUTPUT
 
-  #     - name: Configure AWS Credentials for Wizeprompt
-  #       uses: aws-actions/configure-aws-credentials@v4
-  #       with:
-  #         audience: sts.amazonaws.com
-  #         aws-region: us-east-1
-  #         role-to-assume: 'arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-trust-policy'
-  #         role-duration-seconds: 1800
-  #         role-session-name: ${{ github.actor }}
+      - name: Configure AWS Credentials for jrs-local
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: sts.amazonaws.com
+          aws-region: us-east-1
+          role-to-assume: 'arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-trust-policy'
+          role-duration-seconds: 1800
+          role-session-name: ${{ github.actor }}
 
-  #     - name: Terraform Setup
-  #       uses: hashicorp/setup-terraform@v2.0.3
-  #       with:
-  #         terraform_version: 1.3.7
-  #         terraform_wrapper: false
+      - name: Terraform Setup
+        uses: hashicorp/setup-terraform@v2.0.3
+        with:
+          terraform_version: 1.3.7
+          terraform_wrapper: false
 
-  #     - name: Terraform fmt
-  #       id: fmt
-  #       run: terraform fmt -recursive -check
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -recursive -check
 
-  #     - name: Terraform Init
-  #       id: init-default
-  #       run: terraform init
+      - name: Terraform Init
+        id: init-default
+        run: terraform init
 
-  #     - name: Terraform Workspace
-  #       id: workspace
-  #       env:
-  #         TARGET: ${{ steps.dependencies.outputs.workspace }}
-  #       run: terraform workspace select $TARGET
+      - name: Terraform Workspace
+        id: workspace
+        env:
+          TARGET: ${{ steps.dependencies.outputs.workspace }}
+        run: terraform workspace select $TARGET
 
-  #     - name: Terraform Init
-  #       if: ${{ steps.dependencies.outputs.workspace == 'prod' }}
-  #       id: init-prod
-  #       run: terraform init
+      - name: Terraform Init
+        if: ${{ steps.dependencies.outputs.workspace == 'prod' }}
+        id: init-prod
+        run: terraform init
 
-  #     - name: Terraform Validate
-  #       id: validate
-  #       run: terraform validate -no-color
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
 
-  #     - name: Terraform Plan
-  #       id: plan
-  #       env:
-  #         ENVIRONMENT: ${{ steps.dependencies.outputs.environment }}
-  #         GITHUB_TOKEN: ${{ secrets.GH_PAT_TERRAFORM }}
-  #         GITHUB_OWNER: ${{ secrets.GH_OWNER }}
-  #       run: |
-  #         terraform plan -var environment_name="${ENVIRONMENT}" -no-color
+      - name: Terraform Plan
+        id: plan
+        env:
+          ENVIRONMENT: ${{ steps.dependencies.outputs.environment }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT_TERRAFORM }}
+          GITHUB_OWNER: ${{ secrets.GH_OWNER }}
+        run: |
+          terraform plan -var token="${GITHUB_TOKEN}" -no-color
 
-  #     - name: Terraform - Plan output file
-  #       id: planFile
-  #       env:
-  #         ENVIRONMENT: ${{ steps.dependencies.outputs.environment }}
-  #         GITHUB_TOKEN: ${{ secrets.GH_PAT_TERRAFORM }}
-  #         GITHUB_OWNER: ${{ secrets.GH_OWNER }}
-  #       run: |
-  #         terraform plan -var environment_name="${ENVIRONMENT}" -out=plan.tmp
-  #         terraform show -no-color plan.tmp > ./plan.out
+      - name: Terraform - Plan output file
+        id: planFile
+        env:
+          ENVIRONMENT: ${{ steps.dependencies.outputs.environment }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT_TERRAFORM }}
+          GITHUB_OWNER: ${{ secrets.GH_OWNER }}
+        run: |
+          terraform plan -var token="${GITHUB_TOKEN}" -out=plan.tmp
+          terraform show -no-color plan.tmp > ./plan.out
 
-  #     - uses: actions/github-script@v6
-  #       if: always()
-  #       with:
-  #         github-token: ${{ secrets.GITHUB_TOKEN }}
-  #         script: |
-  #           const run_url = process.env.GITHUB_SERVER_URL + '/' + process.env.GITHUB_REPOSITORY + '/actions/runs/' + process.env.GITHUB_RUN_ID
-  #           const run_link = '<a href="' + run_url + '">Actions</a>.'
-  #           const fs = require('fs')
-  #           const plan_file = fs.readFileSync('plan.out', 'utf8')
-  #           const plan = plan_file.length > 65000 ? plan_file.toString().substring(0, 65000) + " ..." : plan_file
-  #           const truncated_message = plan_file.length > 65000 ? "Output is too long and was truncated. You can read full Plan in " + run_link + "<br /><br />" : ""
-  #           const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-  #           #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-  #           #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-  #           <details><summary>Validation Output</summary>
+      - uses: actions/github-script@v6
+        if: always()
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const run_url = process.env.GITHUB_SERVER_URL + '/' + process.env.GITHUB_REPOSITORY + '/actions/runs/' + process.env.GITHUB_RUN_ID
+            const run_link = '<a href="' + run_url + '">Actions</a>.'
+            const fs = require('fs')
+            const plan_file = fs.readFileSync('plan.out', 'utf8')
+            const plan = plan_file.length > 65000 ? plan_file.toString().substring(0, 65000) + " ..." : plan_file
+            const truncated_message = plan_file.length > 65000 ? "Output is too long and was truncated. You can read full Plan in " + run_link + "<br /><br />" : ""
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+            <details><summary>Validation Output</summary>
 
-  #           \`\`\`\n
-  #           ${{ steps.validate.outputs.stdout }}
-  #           \`\`\`
+            \`\`\`\n
+            ${{ steps.validate.outputs.stdout }}
+            \`\`\`
 
-  #           </details>
+            </details>
 
-  #           #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
 
-  #           <details><summary>Show Plan</summary>
+            <details><summary>Show Plan</summary>
 
-  #           \`\`\`\n
-  #           ${plan}
-  #           \`\`\`
+            \`\`\`\n
+            ${plan}
+            \`\`\`
 
-  #           </details>
-  #           ${truncated_message}
+            </details>
+            ${truncated_message}
 
-  #           *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ github.workspace }}\`, Workflow: \`${{ github.workflow }}\`*`;
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ github.workspace }}\`, Workflow: \`${{ github.workflow }}\`*`;
 
-  #           github.rest.issues.createComment({
-  #             issue_number: context.issue.number,
-  #             owner: context.repo.owner,
-  #             repo: context.repo.repo,
-  #             body: output
-  #             })
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+              })
 
-  # stop-runner:
-  #   name: Stop self-hosted EC2 runner.
-  #   needs:
-  #     - start-runner
-  #     - dependencies
-  #     - plan
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     id-token: write
-  #     contents: read
-  #     pull-requests: write
-  #   if: ${{ always() }}
-  #   steps:
-  #     - name: Configure AWS Credentials for Wizeprompt
-  #       uses: aws-actions/configure-aws-credentials@v4
-  #       with:
-  #         audience: sts.amazonaws.com
-  #         aws-region: us-east-1
-  #         role-to-assume: 'arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-trust-policy'
-  #         role-duration-seconds: 1800
-  #         role-session-name: ${{ github.actor }}
+  stop-runner:
+    name: Stop self-hosted EC2 runner.
+    needs:
+      - start-runner
+      - dependencies
+      - plan
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
+    if: ${{ always() }}
+    steps:
+      - name: Configure AWS Credentials for jrs-local
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: sts.amazonaws.com
+          aws-region: us-east-1
+          role-to-assume: 'arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-trust-policy'
+          role-duration-seconds: 1800
+          role-session-name: ${{ github.actor }}
 
-  #     - name: Stop EC2 runner
-  #       uses: machulav/ec2-github-runner@v2
-  #       with:
-  #         mode: stop
-  #         github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-  #         label: ${{ needs.start-runner.outputs.label }}
-  #         ec2-instance-id: ${{ needs.start-runner.outputs.ec2-instance-id }}
+      - name: Stop EC2 runner
+        uses: machulav/ec2-github-runner@v2
+        with:
+          mode: stop
+          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          label: ${{ needs.start-runner.outputs.label }}
+          ec2-instance-id: ${{ needs.start-runner.outputs.ec2-instance-id }}

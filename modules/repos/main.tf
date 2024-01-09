@@ -143,3 +143,20 @@ resource "github_repository_file" "tf_plan_template" {
     ]
   }
 }
+
+# add terraform apply template to terraform repo in tfvars
+resource "github_repository_file" "tf_apply_template" {
+  count               = terraform.workspace != "dev" ? 0 : (length(var.tf_plan_template) > 0 ? 1 : 0)
+  repository          = var.tf_plan_template[0].name
+  branch              = "refs/heads/${var.tf_plan_template[0].branch_pipeline}"
+  file                = ".github/workflows/terraform_apply.yaml"
+  content             = file("${path.cwd}/assets/terraform_apply.yaml")
+  overwrite_on_create = false
+
+  lifecycle {
+    ignore_changes = [
+      file,
+      commit_message
+    ]
+  }
+}
