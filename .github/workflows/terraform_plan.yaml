@@ -100,7 +100,10 @@ jobs:
           BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
           if [[ $BRANCH == "main" ]]; then
             ENVIRONMENT="dev"
-            WORKSPACE="dev"
+            WORKSPACE="default"
+          else
+            ENVIRONMENT="dev"
+            WORKSPACE="default"
           fi
           echo "environment=${ENVIRONMENT}" >> $GITHUB_OUTPUT
           echo "workspace=${WORKSPACE}" >> $GITHUB_OUTPUT
