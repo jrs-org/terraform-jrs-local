@@ -1,0 +1,10 @@
+.env
+.terraform
+*.tfstate
+**/*.lock.*
+**/*.tfplan
+*.dev.tfvars
+terraform.tfplan
+terraform.tfstate.backup
+plan.out
+.env*
