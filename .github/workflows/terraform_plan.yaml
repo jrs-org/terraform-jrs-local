@@ -1,7 +1,7 @@
 name: Create terraform plan
 on:
   pull_request:
-    branches: [master, dev]
+    branches: [main, dev]
 
 jobs:
   start-runner:
