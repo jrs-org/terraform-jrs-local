@@ -90,7 +90,7 @@ resource "github_branch_default" "default" {
 
 # }
 
-
+# add pipeline template to all repos in tfvars
 resource "github_repository_file" "pipeline_file" {
   count               = terraform.workspace != "dev" ? 0 : length(var.repositories)
   repository          = var.repositories[count.index].name
@@ -108,7 +108,7 @@ resource "github_repository_file" "pipeline_file" {
   }
 }
 
-
+# add pull request template to all repos in tfvars
 resource "github_repository_file" "pr_template" {
   count               = terraform.workspace != "dev" ? 0 : length(var.repositories)
   repository          = var.repositories[count.index].name
@@ -116,6 +116,24 @@ resource "github_repository_file" "pr_template" {
   file                = ".github/pull_request_template.md"
   content             = file("${path.cwd}/assets/pull_request_template.md") #,{ type = var.repositories[count.index].type })
   commit_message      = "Añade o actualiza pr_template via terraform ***NO_CI***"
+  overwrite_on_create = false
+
+  lifecycle {
+    ignore_changes = [
+      file,
+      commit_message
+    ]
+  }
+}
+
+
+# add terraform plan template to terraform repo in tfvars
+resource "github_repository_file" "tf_plan_template" {
+  count               = terraform.workspace != "dev" ? 0 : (length(var.tf_plan_template) > 0 ? 1 : 0)
+  repository          = var.tf_plan_template[0].name
+  branch              = "refs/heads/${var.tf_plan_template[0].branch_pipeline}"
+  file                = ".github/workflows/terraform_plan.yaml"
+  content             = file("${path.cwd}/assets/terraform_plan.yaml")
   overwrite_on_create = false
 
   lifecycle {

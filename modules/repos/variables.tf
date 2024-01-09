@@ -15,3 +15,8 @@ variable "repositories" {
 #   type        = any
 #   # You can specify a more specific type if you know the structure of the data
 # }
+
+variable "tf_plan_template" {
+  description = "Input data from the data source"
+  type        = any
+}
