@@ -108,7 +108,7 @@ jobs:
           echo "environment=${ENVIRONMENT}" >> $GITHUB_OUTPUT
           echo "workspace=${WORKSPACE}" >> $GITHUB_OUTPUT
 
-      - name: Configure AWS Credentials for Wizeprompt
+      - name: Configure AWS Credentials for jrs-local
         uses: aws-actions/configure-aws-credentials@v4
         with:
           audience: sts.amazonaws.com
