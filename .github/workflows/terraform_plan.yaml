@@ -103,8 +103,9 @@ jobs:
             WORKSPACE="dev"
           else
             ENVIRONMENT="dev"
-            WORKSPACE="default"
+            WORKSPACE="dev"
           fi
+          echo ${BRANCH}
           echo "environment=${ENVIRONMENT}" >> $GITHUB_OUTPUT
           echo "workspace=${WORKSPACE}" >> $GITHUB_OUTPUT
 
