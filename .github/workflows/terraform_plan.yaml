@@ -162,7 +162,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_PAT_TERRAFORM }}
           GITHUB_OWNER: ${{ secrets.GH_OWNER }}
         run: |
-          terraform plan -var environment_name="${ENVIRONMENT}" -out=plan.tmp
+          terraform plan -var token="${GITHUB_TOKEN}" -out=plan.tmp
           terraform show -no-color plan.tmp > ./plan.out
 
       - uses: actions/github-script@v6
