@@ -153,7 +153,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_PAT_TERRAFORM }}
           GITHUB_OWNER: ${{ secrets.GH_OWNER }}
         run: |
-          terraform plan -var environment_name="${ENVIRONMENT}" -no-color
+          terraform plan -var token="${GITHUB_TOKEN}" -no-color
 
       - name: Terraform - Plan output file
         id: planFile
