@@ -1,10 +1,9 @@
 name: Create terraform plan
 on:
-  # pull_request:
-  #   branches: [main, dev]
   push:
-    branches: [ft/tfplan]
-
+    branches:
+      - main
+      - ft/tfplan
 jobs:
   start-runner:
     name: Start self-hosted EC2 runner.
