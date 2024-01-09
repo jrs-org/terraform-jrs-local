@@ -221,7 +221,7 @@ jobs:
       pull-requests: write
     if: ${{ always() }}
     steps:
-      - name: Configure AWS Credentials for Wizeprompt
+      - name: Configure AWS Credentials for jrs-local
         uses: aws-actions/configure-aws-credentials@v4
         with:
           audience: sts.amazonaws.com
