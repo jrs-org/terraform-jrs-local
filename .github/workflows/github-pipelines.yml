@@ -1,0 +1,27 @@
+name: 001-ms-template-caller
+
+on:
+  push:
+    branches: none # [ main ]
+  pull_request:
+    branches: none # [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  call-pipeline-workflow-A:
+    uses: josue-r/Pipelines/.github/workflows/github-pipelines.yml@main
+    with:
+      username: Josue
+      lastname: Ruiz
+    secrets:
+      token: ${{ secrets.TOKEN }}
+
+  call-pipeline-workflow-B:
+    uses: josue-r/Pipelines/.github/workflows/github-pipelines.yml@main
+    with:
+      username: Vero
+      lastname: Zamora
+    secrets:
+      token: ${{ secrets.TOKEN }}
