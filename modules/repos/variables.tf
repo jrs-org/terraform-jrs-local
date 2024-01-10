@@ -20,3 +20,8 @@ variable "tf_plan_template" {
   description = "Input data from the data source"
   type        = any
 }
+
+variable "tf_repo_branch_prot" {
+  description = "Input data from the data source"
+  type        = any
+}
