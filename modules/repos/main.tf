@@ -34,19 +34,19 @@ resource "github_branch_default" "default" {
   repository = each.value.name
   branch     = each.value.default_branch
   rename     = true
-  depends_on = [ github_repository.repository_branch_autoninit ]
+  depends_on = [github_repository.repository_branch_autoninit]
 }
 
 #branch protection
-Protect the main branch of the foo repository. Additionally, require that
-the "ci/check" check ran by the Github Actions app is passing and only allow
-the engineers team merge to the branch.
+# Protect the main branch of the foo repository. Additionally, require that
+# the "ci/check" check ran by the Github Actions app is passing and only allow
+# the engineers team merge to the branch.
 
 resource "github_branch_protection" "branch_policy" {
   for_each      = { for repo in var.repositories : repo.name => repo }
   repository_id = each.value.name
   pattern       = each.value.default_branch
-  depends_on = [ github_branch_default.default ]
+  depends_on    = [github_branch_default.default]
 
   enforce_admins   = true
   allows_deletions = false
