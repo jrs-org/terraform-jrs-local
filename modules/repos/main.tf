@@ -46,7 +46,7 @@ resource "github_repository_file" "pipeline_file" {
   content             = file("${path.cwd}/assets/github-pipelines.yml") #,{ type = var.repositories[count.index].type })
   commit_message      = "Añade o actualiza pipelines_file via terraform ***NO_CI***"
   overwrite_on_create = false
-  depends_on = [ github_branch_default.default ]
+  depends_on          = [github_branch_default.default]
 
   lifecycle {
     ignore_changes = [
@@ -65,7 +65,7 @@ resource "github_repository_file" "pr_template" {
   content             = file("${path.cwd}/assets/pull_request_template.md") #,{ type = var.repositories[count.index].type })
   commit_message      = "Añade o actualiza pr_template via terraform ***NO_CI***"
   overwrite_on_create = false
-  depends_on = [ github_repository_file.pipeline_file ]
+  depends_on          = [github_repository_file.pipeline_file]
 
   lifecycle {
     ignore_changes = [
