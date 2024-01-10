@@ -21,7 +21,15 @@ repositories = [
     branch_pipeline = "main"
     default_branch  = "main"
   },
+  {
+    name            = "MS-Test12"
+    type            = "ms"
+    path            = "ms"
+    branch_pipeline = "master"
+    default_branch  = "master"
+  },
 
 ]
 
+# General Value for region
 region = "us-east-1"
