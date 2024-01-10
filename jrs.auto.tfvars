@@ -21,13 +21,13 @@ repositories = [
     branch_pipeline = "main"
     default_branch  = "main"
   },
-  # {
-  #   name            = "MS-Test12"
-  #   type            = "ms"
-  #   path            = "ms"
-  #   branch_pipeline = "master"
-  #   default_branch  = "master"
-  # },
+  {
+    name            = "MS-Test12"
+    type            = "ms"
+    path            = "ms"
+    branch_pipeline = "master"
+    default_branch  = "master"
+  },
 
 ]
 
