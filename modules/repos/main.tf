@@ -111,13 +111,13 @@ resource "github_repository_file" "tf_apply_template" {
 }
 
 
-# branch protection
-# Protect the main branch of the foo repository. Additionally, require that
-# the "ci/check" check ran by the Github Actions app is passing and only allow
-# the engineers team merge to the branch.
+# # branch protection
+# # Protect the main branch of the foo repository. Additionally, require that
+# # the "ci/check" check ran by the Github Actions app is passing and only allow
+# # the engineers team merge to the branch.
 
 resource "github_branch_protection" "branch_policy" {
-  count      = terraform.workspace != "dev" ? 0 : (length(var.tf_repo_branch_prot) > 0 ? 1 : 0)
+  count         = terraform.workspace != "dev" ? 0 : (length(var.tf_repo_branch_prot))
   repository_id = var.tf_repo_branch_prot[count.index].name
   pattern       = var.tf_repo_branch_prot[count.index].default_branch
   depends_on    = [github_repository_file.pr_template]
@@ -125,10 +125,10 @@ resource "github_branch_protection" "branch_policy" {
   enforce_admins   = true
   allows_deletions = false
 
-  required_status_checks {
-    strict   = true
-    contexts = ["ci/github-pipelines.yml"]
-  }
+  # required_status_checks {
+  #   strict   = true
+  #   contexts = ["ci/github-pipelines.yml"]
+  # }
 
   required_pull_request_reviews {
     dismiss_stale_reviews           = true
