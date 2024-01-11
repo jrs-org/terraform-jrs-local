@@ -1,7 +1,7 @@
 name: Apply terraform plan
 on:
   push:
-    branches: [main, dev]
+    branches: [master, dev]
 
 jobs:
   start-runner:
@@ -97,7 +97,7 @@ jobs:
         shell: bash
         run: |
           BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
-          if [[ $BRANCH == "main" ]]; then
+          if [[ $BRANCH == "master" ]]; then
             ENVIRONMENT="dev"
             WORKSPACE="dev"
           else
@@ -143,7 +143,8 @@ jobs:
           ENVIRONMENT: ${{ steps.dependencies.outputs.environment }}
           GITHUB_TOKEN: ${{ secrets.GH_PAT_TERRAFORM }}
           GITHUB_OWNER: ${{ secrets.GH_OWNER }}
-        run: terraform apply -var token="${GITHUB_TOKEN}" -auto-approve
+          TF_VAR_token: ${{ secrets.GH_PAT_TERRAFORM }}
+        run: terraform apply -auto-approve
 
   stop-runner:
     name: Stop self-hosted EC2 runner.

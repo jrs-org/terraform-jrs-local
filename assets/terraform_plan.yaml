@@ -1,7 +1,7 @@
 name: Create terraform plan
 on:
   pull_request:
-    branches: [main, dev]
+    branches: [master, dev]
 
 jobs:
   start-runner:
@@ -98,7 +98,7 @@ jobs:
         shell: bash
         run: |
           BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
-          if [[ $BRANCH == "main" ]]; then
+          if [[ $BRANCH == "master" ]]; then
             ENVIRONMENT="dev"
             WORKSPACE="dev"
           else
@@ -153,8 +153,9 @@ jobs:
           ENVIRONMENT: ${{ steps.dependencies.outputs.environment }}
           GITHUB_TOKEN: ${{ secrets.GH_PAT_TERRAFORM }}
           GITHUB_OWNER: ${{ secrets.GH_OWNER }}
+          TF_VAR_token: ${{ secrets.GH_PAT_TERRAFORM }}
         run: |
-          terraform plan -var token="${GITHUB_TOKEN}" -no-color
+          terraform plan -no-color
 
       - name: Terraform - Plan output file
         id: planFile
@@ -162,8 +163,9 @@ jobs:
           ENVIRONMENT: ${{ steps.dependencies.outputs.environment }}
           GITHUB_TOKEN: ${{ secrets.GH_PAT_TERRAFORM }}
           GITHUB_OWNER: ${{ secrets.GH_OWNER }}
+          TF_VAR_token: ${{ secrets.GH_PAT_TERRAFORM }}
         run: |
-          terraform plan -var token="${GITHUB_TOKEN}" -out=plan.tmp
+          terraform plan -out=plan.tmp
           terraform show -no-color plan.tmp > ./plan.out
 
       - uses: actions/github-script@v6
