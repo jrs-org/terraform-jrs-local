@@ -1,0 +1,18 @@
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+.env
+.terraform
+*.tfstate
+**/*.lock.*
+**/*.tfplan
+*.dev.tfvars
+terraform.tfplan
+terraform.tfstate.backup
+plan.out
+.env*
+.envrc

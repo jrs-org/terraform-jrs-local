@@ -153,14 +153,8 @@ jobs:
           ENVIRONMENT: ${{ steps.dependencies.outputs.environment }}
           GITHUB_TOKEN: ${{ secrets.GH_PAT_TERRAFORM }}
           GITHUB_OWNER: ${{ secrets.GH_OWNER }}
-<<<<<<< HEAD
         run: |
           terraform plan -var token="${GITHUB_TOKEN}" -no-color
-=======
-          TF_VAR_token: ${{ secrets.GH_PAT_TERRAFORM }}
-        run: |
-          terraform plan -no-color
->>>>>>> ft/resourcedependency
 
       - name: Terraform - Plan output file
         id: planFile
@@ -168,14 +162,8 @@ jobs:
           ENVIRONMENT: ${{ steps.dependencies.outputs.environment }}
           GITHUB_TOKEN: ${{ secrets.GH_PAT_TERRAFORM }}
           GITHUB_OWNER: ${{ secrets.GH_OWNER }}
-<<<<<<< HEAD
         run: |
           terraform plan -var token="${GITHUB_TOKEN}" -out=plan.tmp
-=======
-          TF_VAR_token: ${{ secrets.GH_PAT_TERRAFORM }}
-        run: |
-          terraform plan -out=plan.tmp
->>>>>>> ft/resourcedependency
           terraform show -no-color plan.tmp > ./plan.out
 
       - uses: actions/github-script@v6

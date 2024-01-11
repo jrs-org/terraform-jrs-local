@@ -1,2 +1,2 @@
 # terraform-jrs-local
-Repository managed by Terraform 1
+Repository managed by Terraform
