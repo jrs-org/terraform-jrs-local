@@ -1,7 +1,7 @@
 name: Create terraform plan
 on:
   pull_request:
-    branches: [main, dev]
+    branches: [master, dev]
 
 jobs:
   start-runner:
@@ -98,7 +98,7 @@ jobs:
         shell: bash
         run: |
           BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
-          if [[ $BRANCH == "main" ]]; then
+          if [[ $BRANCH == "master" ]]; then
             ENVIRONMENT="dev"
             WORKSPACE="dev"
           else
