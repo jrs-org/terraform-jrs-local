@@ -18,8 +18,8 @@ repositories = [
     name            = "terraform-jrs-local"
     type            = "ms"
     path            = "ms"
-    branch_pipeline = "main"
-    default_branch  = "main"
+    branch_pipeline = "master"
+    default_branch  = "master"
   },
   {
     name            = "MS-Test12"
