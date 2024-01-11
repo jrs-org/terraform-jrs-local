@@ -17,7 +17,7 @@ terraform {
 
 
 #repositories branch creation and autoinit
-resource "github_repository" "repository_branch_autoninit" {
+resource "github_repository" "repository_branch_autoinit" {
   for_each = { for repo in var.repositories : repo.name => repo }
   # Configuration options
   name        = each.value.name
@@ -34,7 +34,7 @@ resource "github_branch_default" "default" {
   repository = each.value.name
   branch     = each.value.default_branch
   rename     = true
-  depends_on = [github_repository.repository_branch_autoninit]
+  depends_on = [github_repository.repository_branch_autoinit]
 }
 
 # add pipeline template to all repos in tfvars

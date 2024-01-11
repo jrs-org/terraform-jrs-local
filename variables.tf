@@ -19,7 +19,9 @@ variable "region" {
   type        = string
 }
 
-
+output "repo_full_name" {
+  value = module.repos.repo_full_name
+}
 
 # data "aws_caller_identity" "current" {}
 
