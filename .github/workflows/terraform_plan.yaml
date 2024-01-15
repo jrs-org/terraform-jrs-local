@@ -159,11 +159,11 @@ jobs:
 
       - name: Terraform - Plan output file
         id: planFile
-        env:
-          ENVIRONMENT: ${{ steps.dependencies.outputs.environment }}
-          GITHUB_TOKEN: ${{ secrets.GH_PAT_TERRAFORM }}
-          GITHUB_OWNER: ${{ secrets.GH_OWNER }}
-          TF_VAR_token: ${{ secrets.GH_PAT_TERRAFORM }}
+        # env:
+        #   ENVIRONMENT: ${{ steps.dependencies.outputs.environment }}
+        #   GITHUB_TOKEN: ${{ secrets.GH_PAT_TERRAFORM }}
+        #   GITHUB_OWNER: ${{ secrets.GH_OWNER }}
+        #   TF_VAR_token: ${{ secrets.GH_PAT_TERRAFORM }}
         run: |
           terraform plan -out=plan.tmp
           terraform show -no-color plan.tmp > ./plan.out
