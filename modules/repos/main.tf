@@ -22,7 +22,7 @@ resource "github_repository" "repository_branch_autoinit" {
   # Configuration options
   name        = each.value.name
   description = "Repository managed by Terraform"
-  visibility  = "public"
+  visibility  = "internal"
   #   default_branch = each.value.default_branch
   auto_init = true
 
