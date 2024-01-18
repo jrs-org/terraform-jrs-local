@@ -80,7 +80,7 @@ jobs:
     name: Terraform Plan
     needs:
     - start-runner
-    - dependencies
+    # - dependencies
     runs-on: self-hosted
     permissions:
       id-token: write
@@ -210,32 +210,32 @@ jobs:
               body: output
               })
 
-  stop-runner:
-    name: Stop self-hosted EC2 runner.
-    needs:
-      - start-runner
-      - dependencies
-      - plan
-    runs-on: self-hosted
-    permissions:
-      id-token: write
-      contents: read
-      pull-requests: write
-    if: ${{ always() }}
-    steps:
-      - name: Configure AWS Credentials for jrs-local
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          audience: sts.amazonaws.com
-          aws-region: us-east-1
-          role-to-assume: 'arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-trust-policy'
-          role-duration-seconds: 1800
-          role-session-name: ${{ github.actor }}
+  # stop-runner:
+  #   name: Stop self-hosted EC2 runner.
+  #   needs:
+  #     - start-runner
+  #     - dependencies
+  #     - plan
+  #   runs-on: self-hosted
+  #   permissions:
+  #     id-token: write
+  #     contents: read
+  #     pull-requests: write
+  #   if: ${{ always() }}
+  #   steps:
+  #     - name: Configure AWS Credentials for jrs-local
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         audience: sts.amazonaws.com
+  #         aws-region: us-east-1
+  #         role-to-assume: 'arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-trust-policy'
+  #         role-duration-seconds: 1800
+  #         role-session-name: ${{ github.actor }}
 
-      - name: Stop EC2 runner
-        uses: machulav/ec2-github-runner@v2
-        with:
-          mode: stop
-          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-          label: ${{ needs.start-runner.outputs.label }}
-          ec2-instance-id: ${{ needs.start-runner.outputs.ec2-instance-id }}
+  #     - name: Stop EC2 runner
+  #       uses: machulav/ec2-github-runner@v2
+  #       with:
+  #         mode: stop
+  #         github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+  #         label: ${{ needs.start-runner.outputs.label }}
+  #         ec2-instance-id: ${{ needs.start-runner.outputs.ec2-instance-id }}
