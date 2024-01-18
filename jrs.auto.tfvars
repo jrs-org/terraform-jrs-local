@@ -35,6 +35,14 @@ repositories = [
     branch_pipeline = "master"
     default_branch  = "master"
   },
+  {
+    name            = "MS-Test14"
+    type            = "ms"
+    path            = "ms"
+    branch_pipeline = "master"
+    default_branch  = "master"
+  },
+
 
 ]
 
