@@ -7,10 +7,10 @@ jobs:
   start-runner:
     name: Start self-hosted EC2 runner.
     runs-on: self-hosted
-  #   permissions:
-  #     id-token: write
-  #     contents: read
-  #     pull-requests: write
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
   #   outputs:
   #     label: ${{ steps.start-ec2-runner.outputs.label }}
   #     ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
