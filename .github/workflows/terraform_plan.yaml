@@ -6,39 +6,39 @@ on:
 jobs:
   start-runner:
     name: Start self-hosted EC2 runner.
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-      pull-requests: write
-    outputs:
-      label: ${{ steps.start-ec2-runner.outputs.label }}
-      ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
-    steps:
-      - name: Configure AWS Credentials for jrs-local
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          audience: sts.amazonaws.com
-          aws-region: us-east-1
-          role-to-assume: 'arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-trust-policy'
-          role-duration-seconds: 1800
-          role-session-name: ${{ github.actor }}
+    runs-on: self-hosted
+  #   permissions:
+  #     id-token: write
+  #     contents: read
+  #     pull-requests: write
+  #   outputs:
+  #     label: ${{ steps.start-ec2-runner.outputs.label }}
+  #     ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
+  #   steps:
+  #     - name: Configure AWS Credentials for jrs-local
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         audience: sts.amazonaws.com
+  #         aws-region: us-east-1
+  #         role-to-assume: 'arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-trust-policy'
+  #         role-duration-seconds: 1800
+  #         role-session-name: ${{ github.actor }}
 
-      - name: Start EC2 runner
-        id: start-ec2-runner
-        uses: machulav/ec2-github-runner@v2
-        with:
-          mode: start
-          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-          ec2-image-id: ami-06aa3f7caf3a30282
-          ec2-instance-type: t3.medium
-          subnet-id: subnet-099e0cf8d526f00d7
-          security-group-id: sg-018e56852a5b353cf
+  #     - name: Start EC2 runner
+  #       id: start-ec2-runner
+  #       uses: machulav/ec2-github-runner@v2
+  #       with:
+  #         mode: start
+  #         github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+  #         ec2-image-id: ami-06aa3f7caf3a30282
+  #         ec2-instance-type: t3.medium
+  #         subnet-id: subnet-099e0cf8d526f00d7
+  #         security-group-id: sg-018e56852a5b353cf
 
-  dependencies:
-    name: Install Dependencies
-    needs: start-runner
-    runs-on: ${{ needs.start-runner.outputs.label }}
+  # dependencies:
+  #   name: Install Dependencies
+  #   needs: start-runner
+  #   runs-on: ${{ needs.start-runner.outputs.label }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -81,7 +81,7 @@ jobs:
     needs:
     - start-runner
     - dependencies
-    runs-on: ${{ needs.start-runner.outputs.label }}
+    runs-on: self-hosted
     permissions:
       id-token: write
       contents: read
@@ -216,7 +216,7 @@ jobs:
       - start-runner
       - dependencies
       - plan
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       id-token: write
       contents: read
