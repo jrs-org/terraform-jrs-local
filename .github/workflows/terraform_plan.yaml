@@ -66,9 +66,10 @@ jobs:
             echo "Installing AWS CLI..."
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip -q awscliv2.zip
-            sudo ./aws/install
+            sudo ./aws/install --update
           else
-            echo "AWS CLI is already installed."
+            echo "Updating AWS CLI..."
+            sudo ./aws/install --update
           fi
 
       - name: Set ip gh CLI
