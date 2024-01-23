@@ -14,13 +14,7 @@ repositories = [
     branch_pipeline = "master"
     default_branch  = "master"
   },
-  {
-    name            = "terraform-jrs-local"
-    type            = "ms"
-    path            = "ms"
-    branch_pipeline = "master"
-    default_branch  = "master"
-  },
+
   {
     name            = "MS-Test12"
     type            = "ms"
@@ -28,21 +22,20 @@ repositories = [
     branch_pipeline = "master"
     default_branch  = "master"
   },
-  {
-    name            = "MS-Test13"
-    type            = "ms"
-    path            = "ms"
-    branch_pipeline = "master"
-    default_branch  = "master"
-  },
-  {
-    name            = "MS-Test14"
-    type            = "ms"
-    path            = "ms"
-    branch_pipeline = "master"
-    default_branch  = "master"
-  },
-
+  # {
+  #   name            = "MS-Test13"
+  #   type            = "ms"
+  #   path            = "ms"
+  #   branch_pipeline = "master"
+  #   default_branch  = "master"
+  # },
+  # {
+  #   name            = "MS-Test14"
+  #   type            = "ms"
+  #   path            = "ms"
+  #   branch_pipeline = "master"
+  #   default_branch  = "master"
+  # },
 
 ]
 

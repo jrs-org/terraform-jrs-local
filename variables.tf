@@ -28,24 +28,6 @@ output "repo_full_name" {
 }
 
 
-# variable "type_org" {
-#   description = "vioc"
-#   type        = string
-#   default = "vioc"
-# }
-
-# variable "type_store" {
-#   description = "store"
-#   type        = string
-#   default = "store"
-# }
-
-# variable "type_central" {
-#   description = "central"
-#   type        = string
-#   default = "central"
-# }
-
 
 
 # data "aws_caller_identity" "current" {}
