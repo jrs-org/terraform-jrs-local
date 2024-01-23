@@ -82,8 +82,8 @@ jobs:
     name: Terraform Plan
     needs:
     - start-runner
-    - dependencies
-    runs-on: ${{ needs.start-runner.outputs.label }}
+    # - dependencies
+    runs-on: self-hosted
     permissions:
       id-token: write
       contents: read
