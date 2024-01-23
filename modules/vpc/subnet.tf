@@ -22,6 +22,7 @@ resource "aws_route_table" "jrs_public_route_table" {
   }
 }
 
+##enter comment
 # resource "aws_route_table" "jrs_private_route_table" {
 #   vpc_id = aws_vpc.jrs_vpc.id
 
