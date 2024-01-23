@@ -39,5 +39,15 @@ repositories = [
 
 ]
 
+pipelines_repo = [
+  {
+    name            = "Pipelines"
+    type            = "DevOps"
+    path            = "DevOps"
+    branch_pipeline = "master"
+    default_branch  = "master"
+  },
+
+]
 # General Value for region
 region = "us-east-1"
