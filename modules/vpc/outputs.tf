@@ -1,6 +1,6 @@
 output "vpc_id" {
   description = "ID of the Wize Promt VPC"
-  value       = aws_vpc.jrs_vpc.id
+  value       = terraform.workspace == "dev" ? aws_vpc.jrs_vpc[0].id : ""
 
   depends_on = [
     aws_subnet.jrs_public_subnet,
@@ -12,7 +12,7 @@ output "vpc_id" {
 }
 
 output "cidr_block" {
-  value       = aws_vpc.jrs_vpc.cidr_block
+  value       = terraform.workspace == "dev" ? aws_vpc.jrs_vpc[0].cidr_block : ""
   description = "Virtual Private Cloud CIDR BLOCK"
   sensitive   = true
 }
