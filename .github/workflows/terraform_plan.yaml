@@ -11,6 +11,7 @@ jobs:
       id-token: write
       contents: read
       pull-requests: write
+  ## remove to use ec2 runner
   #   outputs:
   #     label: ${{ steps.start-ec2-runner.outputs.label }}
   #     ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
