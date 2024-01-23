@@ -60,6 +60,51 @@ resource "github_repository_file" "pipeline_file" {
   }
 }
 
+
+#repositories pipeline repo branch creation and autoinit
+resource "github_repository" "repository_pipelines" {
+  for_each = { for repo in var.pipelines_repo : repo.name => repo if terraform.workspace == "dev" }
+  name     = each.value.name
+  #for_each = { for repo in var.repositories : repo.name => repo }
+  # Configuration options
+  #name        = each.value.name
+  description = "Repository managed by Terraform"
+  visibility  = "public"
+  auto_init   = true
+
+}
+
+#rename current pipelines branch to master
+resource "github_branch_default" "default_pipelines" {
+  for_each   = { for repo in var.pipelines_repo : repo.name => repo if terraform.workspace == "dev" }
+  repository = each.value.name
+  branch     = each.value.default_branch
+  # for_each   = { for repo in var.repositories : repo.name => repo }
+  # repository = each.value.name
+  # branch     = each.value.default_branch
+  rename     = true
+  depends_on = [github_repository.repository_pipelines]
+}
+
+## add ci.yml file to pipilines repo
+resource "github_repository_file" "ci_file" {
+  for_each            = { for repo in var.pipelines_repo : repo.name => repo if terraform.workspace == "dev" }
+  repository          = each.value.name
+  branch              = "refs/heads/${each.value.branch_pipeline}"
+  file                = ".github/workflows/ci.yml"
+  content             = file("${path.cwd}/assets/ci.yml") #,{ type = var.repositories[count.index].type })
+  commit_message      = "Añade o actualiza ci.yml via terraform ***NO_CI***"
+  overwrite_on_create = false
+  depends_on          = [github_branch_default.default_pipelines]
+
+  lifecycle {
+    ignore_changes = [
+      file,
+      commit_message
+    ]
+  }
+}
+
 # add pull request template to all repos in tfvars
 resource "github_repository_file" "pr_template" {
   for_each            = { for repo in var.repositories : repo.name => repo if terraform.workspace == "dev" }
