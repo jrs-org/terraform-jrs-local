@@ -39,3 +39,11 @@ variable "tf_repo_branch_prot" {
   description = "Input data from the data source"
   type        = any
 }
+
+
+variable "scopes_branch" {
+  type = list(object({
+    repository_ref = string
+  }))
+  default = []
+}

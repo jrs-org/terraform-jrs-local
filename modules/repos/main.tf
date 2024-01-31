@@ -26,8 +26,23 @@ resource "github_repository" "repository_branch_autoinit" {
   description = "Repository managed by Terraform"
   visibility  = "public"
   auto_init   = true
-
 }
+
+# # Branch creation for all repos
+# resource "github_branch" "branch" {
+#   count = terraform.workspace != "dev" ? 0 : length(var.repositories)
+#   repository = var.repositories[count.index].name
+#   branch = var.repositories[count.index].default_branch
+#   # dynamic "scope" {
+#   #   for_each = var.scopes_branch
+#   #   content {
+#   #     # repository_id  = data.azuredevops_git_repository.repositories[count.index].id
+#   #     branch = scope.value["repository_ref"]
+#   #     match_type     = "Exact"
+#   #   }
+#   # }
+# }
+
 
 #rename current branch to master
 resource "github_branch_default" "default" {
@@ -171,8 +186,10 @@ resource "github_branch_protection" "branch_policy" {
   pattern       = each.value.default_branch
   depends_on    = [github_repository_file.pr_template]
 
-  enforce_admins   = true
-  allows_deletions = false
+  enforce_admins                  = false
+  allows_deletions                = false
+  allows_force_pushes             = true
+  require_conversation_resolution = true
 
   # required_status_checks {
   #   strict   = true
@@ -181,35 +198,38 @@ resource "github_branch_protection" "branch_policy" {
 
   required_pull_request_reviews {
     dismiss_stale_reviews           = true
-    restrict_dismissals             = false
+    restrict_dismissals             = true
     require_code_owner_reviews      = true
     required_approving_review_count = 2
-    # dismissal_restrictions = [
-    #   data.github_user.example.node_id,
-    #   github_team.example.node_id,
-    #   "/exampleuser",
-    #   "exampleorganization/exampleteam",
-    # ]
+    pull_request_bypassers = [
+      "jrs-org/jrs-test-team",
+    ]
+    dismissal_restrictions = [
+      # data.github_user.example.node_id,
+      # github_team.example.node_id,
+      "jrs-org/jrs-test-team",
+      # "exampleorganization/exampleteam",
+    ]
   }
 
-  #   push_restrictions = [
-  #     # data.github_user.example.node_id,
-  #     "/exampleuser",
-  #     # "exampleorganization/exampleteam",
-  #     # you can have more than one type of restriction (teams + users). If you use
-  #     # more than one type, you must use node_ids of each user and each team.
-  #     # github_team.example.node_id
-  #     # github_user.example-2.node_id
-  #   ]
+  push_restrictions = [
+    # data.github_user.example.node_id,
+    "jrs-org/jrs-test-team",
+    # "exampleorganization/exampleteam",
+    # you can have more than one type of restriction (teams + users). If you use
+    # more than one type, you must use node_ids of each user and each team.
+    # github_team.example.node_id
+    # github_user.example-2.node_id
+  ]
 
-  #   force_push_bypassers = [
-  #     # data.github_user.example.node_id,
-  #     "/exampleuser",
-  #     # "exampleorganization/exampleteam",
-  #     # you can have more than one type of restriction (teams + users)
-  #     # github_team.example.node_id
-  #     # github_team.example-2.node_id
-  #   ]
+  force_push_bypassers = [
+    # data.github_user.example.node_id,
+    "jrs-org/jrs-test-team",
+    # "exampleorganization/exampleteam",
+    # you can have more than one type of restriction (teams + users)
+    # github_team.example.node_id
+    # github_team.example-2.node_id
+  ]
 
 }
 
