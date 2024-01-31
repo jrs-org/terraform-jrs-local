@@ -23,9 +23,10 @@ resource "github_repository" "repository_branch_autoinit" {
   #for_each = { for repo in var.repositories : repo.name => repo }
   # Configuration options
   #name        = each.value.name
-  description = "Repository managed by Terraform"
-  visibility  = "public"
-  auto_init   = true
+  description            = "Repository managed by Terraform"
+  visibility             = "public"
+  auto_init              = true
+  delete_branch_on_merge = true
 }
 
 # # Branch creation for all repos
