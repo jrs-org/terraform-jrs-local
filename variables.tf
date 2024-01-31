@@ -42,7 +42,12 @@ output "repo_full_name" {
   value = module.repos.repo_full_name
 }
 
-
+variable "scopes_branch" {
+  type = list(object({
+    repository_ref = string
+  }))
+  default = []
+}
 
 
 # data "aws_caller_identity" "current" {}

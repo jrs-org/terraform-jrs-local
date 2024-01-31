@@ -51,3 +51,17 @@ pipelines_repo = [
 ]
 # General Value for region
 region = "us-east-1"
+
+
+# Branches dynamic block
+scopes_branch = [
+  {
+    repository_ref = "refs/heads/dev"
+  },
+  {
+    repository_ref = "refs/heads/qa"
+  },
+  {
+    repository_ref = "refs/heads/prod"
+  },
+]
