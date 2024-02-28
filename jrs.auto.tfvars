@@ -6,6 +6,7 @@ repositories = [
     path            = "ms"
     branch_pipeline = "master"
     default_branch  = "master"
+    active          = true
   },
   {
     name            = "MS-Tes11"
@@ -13,6 +14,7 @@ repositories = [
     path            = "ms"
     branch_pipeline = "master"
     default_branch  = "master"
+    active          = true
   },
 
   {
@@ -21,6 +23,7 @@ repositories = [
     path            = "ms"
     branch_pipeline = "master"
     default_branch  = "master"
+    active          = true
   },
   # {
   #   name            = "MS-Test13"
@@ -28,6 +31,7 @@ repositories = [
   #   path            = "ms"
   #   branch_pipeline = "master"
   #   default_branch  = "master"
+  #   active                  = true
   # },
   # {
   #   name            = "MS-Test14"
