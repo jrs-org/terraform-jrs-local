@@ -232,6 +232,14 @@ resource "github_branch_protection" "branch_policy" {
     # github_team.example-2.node_id
   ]
 
+  lifecycle {
+    ignore_changes = [
+      allows_force_pushes,
+      force_push_bypassers,
+      push_restrictions,
+      required_pull_request_reviews,
+    ]
+  }
 }
 
 
@@ -287,3 +295,33 @@ resource "github_branch_protection" "branch_policy" {
 #   #   ]
 
 # }
+
+
+## create and apply polices to repository compose
+resource "github_repository" "repository_configuration_compose" {
+  for_each = { for repo in var.compose_repository : repo.name => repo if terraform.workspace == "dev" }
+  ## Configuration options
+  name               = each.value.name
+  visibility         = "internal"
+  auto_init          = true
+  allow_merge_commit = false
+  allow_rebase_merge = false
+  allow_auto_merge   = true
+  allow_squash_merge = true
+  ## this combination of squash commit PR_TITLE and message BLANK is needed to force the rule to only use the PR title for the squash commit message
+  squash_merge_commit_title   = "PR_TITLE"
+  squash_merge_commit_message = "BLANK"
+  delete_branch_on_merge      = true
+  has_wiki                    = true
+  has_issues                  = true
+}
+
+## rename current branch to master
+## the master branch is created by default, so only create this default branch resource if the default is not set to master
+resource "github_branch_default" "default_compose" {
+  for_each   = { for repo in var.compose_repository : repo.name => repo if terraform.workspace == "dev" && repo.default_branch != "master" }
+  repository = each.value.name
+  branch     = each.value.default_branch
+  rename     = true
+  depends_on = [github_repository.repository_configuration_compose]
+}

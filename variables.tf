@@ -65,3 +65,20 @@ variable "scopes_branch" {
 # }
 
 # data "aws_region" "current" {}
+
+
+variable "compose_repository" {
+  type = list(object({
+    name                = string
+    type                = string
+    path                = string
+    branch_pipeline     = string
+    default_branch      = string
+    pr_content_template = string
+  }))
+  default = []
+  validation {
+    condition     = alltrue([for repo in var.compose_repository : can(regex("^vioc-(compose)$", repo.name))])
+    error_message = "Each repository name must start with 'vioc-' followed by 'compose'.\n"
+  }
+}
