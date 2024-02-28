@@ -302,7 +302,7 @@ resource "github_repository" "repository_configuration_compose" {
   for_each = { for repo in var.compose_repository : repo.name => repo if terraform.workspace == "dev" }
   ## Configuration options
   name               = each.value.name
-  visibility         = "internal"
+  visibility         = "public"
   auto_init          = true
   allow_merge_commit = false
   allow_rebase_merge = false
