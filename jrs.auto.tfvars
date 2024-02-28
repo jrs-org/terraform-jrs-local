@@ -65,3 +65,15 @@ scopes_branch = [
     repository_ref = "refs/heads/prod"
   },
 ]
+
+
+compose_repository = [
+  {
+    name                = "vioc-compose"
+    type                = "DevOps"
+    path                = "devops"
+    branch_pipeline     = "master"
+    default_branch      = "master"
+    pr_content_template = "pull_request_template.md"
+  },
+]
