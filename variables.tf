@@ -5,6 +5,7 @@ variable "repositories" {
     path            = string
     branch_pipeline = string
     default_branch  = string
+    active          = bool
   }))
   default = []
   # validation {
