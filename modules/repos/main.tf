@@ -319,7 +319,7 @@ resource "github_repository" "repository_configuration_compose" {
 ## rename current branch to master
 ## the master branch is created by default, so only create this default branch resource if the default is not set to master
 resource "github_branch_default" "default_compose" {
-  for_each   = { for repo in var.compose_repository : repo.name => repo if terraform.workspace == "dev" && repo.default_branch != "master" }
+  for_each   = { for repo in var.compose_repository : repo.name => repo if terraform.workspace == "dev" && repo.default_branch == "master" }
   repository = each.value.name
   branch     = each.value.default_branch
   rename     = true
